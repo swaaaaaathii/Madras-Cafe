@@ -1,0 +1,39 @@
+#imgslideshow{
+	border:2px solid black;
+	height: 80%;
+	animation-name:ss;
+	animation-duration:30s;
+	animation-timing-function:linear;
+	animation-iteration-count:infinite;
+	background-size: 100% 100%;
+	background-repeat: no-repeat;
+}
+
+@keyframes ss
+{
+	0% {background-image:url(idly.jpg);}
+	25% {background-image:url(dosa.jpg);}
+	50% {background-image:url(vada.jpg);}
+	75% {background-image:url(pongal.jpg);}
+	100% {background-image:url(curdrice.jpg);}
+}
+
+a:link, a:visited {
+    background-color: #C70039;
+    color: white;
+    padding: 14px 25px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+}
+
+
+a:hover, a:active {
+    background-color: #C70039;
+}
+
+h1{
+	font-family: "Times New Roman", Times, serif;
+	background-color:beige;
+}
+

@@ -1,0 +1,248 @@
+<html>
+<head>
+	<title>Menu</title>
+	<style>
+		#test{
+			color: #C70039;
+			font-size: 36px;
+			background-color: beige;
+			padding: 0.5%;
+			position: static;
+		}
+		body{
+			background-image: url("background.jpg");
+			background-repeat: no-repeat;
+			background-size: 100% 100%;
+		}
+		#message{
+			background-color: #C70039;
+			font-size: 28px;
+			color: beige;
+			float: right;
+			padding: 0.5%;
+		}
+		.button1{
+			background-color: #C70039;
+			border: none;
+			color: white;
+			padding-top: 15px;
+			padding-bottom: 15px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			font-size: 16px;
+			font-weight: bold;
+			margin: 4px 2px;
+			cursor: pointer;
+			width: 100px;
+		}
+		.button2{
+			background-color: yellow;
+			color:brown;
+			border: 5px solid brown;
+			border-radius: 25px;
+			padding: 15px 32px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			font-size: 16px;
+			font-weight: bold;
+			margin: 4px 2px;
+			cursor: pointer;
+		}
+		.button3{
+			background-color: black;
+			color:white;
+			width: 100px;
+			border: 5px solid brown;
+			padding-top: 15px;
+			padding-bottom: 15px;
+			text-align: center;
+			text-decoration: none;
+			display: inline-block;
+			font-size: 16px;
+			font-weight: bold;
+			margin: 4px 2px;
+			cursor: pointer;
+		}
+		#menu{
+			width: 60%;
+		}
+		#options{
+			width:40%;
+			float:right;
+			position: relative;
+			bottom: 7%;	
+			padding-right: 2%;
+		}
+		#container{
+			height: 100%;
+			width: 100%;
+		}
+		#cart{
+			padding: 2%;
+			width: 60%;
+			height: 70%;
+			overflow:auto;
+			border-radius: 20px;
+		}
+		#item{
+			position: relative;
+			left: 20%;
+			bottom:18%;
+			color: #C70039;
+			text-align: center;
+			padding-top: 2%;
+			padding-bottom: 2%;
+			width: 50%;
+			overflow: auto;
+			height: 60%;
+		}
+		.price{
+			position: relative;
+			left: 52%;
+			bottom: 30px;
+			background-color: yellow;
+			color:brown;
+			border: 5px solid brown;
+			border-radius: 15px;
+			width: 60px;
+		}
+		.qty{
+			width: 20px;
+		}
+	</style>
+</head>
+<body>
+<div id="test"><b>Madras Cafe</b></div><hr>
+<div id="container">
+<div id="menu" align="center">
+<input type="button" onclick="disp(this)" value="Tiffin" class="button1"></input>
+<input type="button" onclick="disp(this)" value="Meals" class="button1"></input>
+<input type="button" onclick="disp(this)" value="Biriyani" class="button1"></input>
+<input type="button" onclick="disp(this)" value="Gravy" class="button1"></input>
+<input type="button" onclick="disp(this)" value="Drinks" class="button1"></input>
+</div>
+<div id="options" align="right">
+<input type="button" value="Quick view" onclick="viewCart()" class="button2"></input>&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+&nbsp &nbsp &nbsp &nbsp &nbsp &nbsp
+<input type="button" value="Go to Cart" onclick="goCart()" class="button2"></input><br><br>
+<div id="cart"  align="center">
+</div>
+</div>
+<div>
+<div id="listitems"></div>
+</div>
+<div id="item"></div>
+</div>
+</body>
+<script>
+	var name;
+	var prompted = localStorage.getItem('prompted');
+	console.log(prompted);
+	if (prompted == ' ') {
+	 name = prompt("Enter your name","");
+	 localStorage.setItem('prompted',name);
+	}
+	else
+		name = prompted;
+	
+	var category;
+	if(name!="null"){
+		var request = new XMLHttpRequest();
+		  request.onreadystatechange=function() {
+			if (request.readyState==4 ) {
+			  document.getElementById("test").innerHTML += "<span id=\"message\">Hello "+request.responseText+"</span>";
+			}
+		  };
+		  request.open("GET","genCookie?name="+name,true);
+		  request.send();
+	}
+	else
+		window.history.back();
+	
+	
+	function goCart(){
+		location.href = "shoppingCart.jsp?name="+name;
+	}
+	
+	function clearCart(){
+		document.getElementById("cart").innerHTML = "";
+		document.getElementById("cart").style.backgroundColor = "";
+	}
+	
+	function viewCart(){
+		var request = new XMLHttpRequest();
+		  request.onreadystatechange=function() {
+			if (request.readyState==4 ) {
+			  document.getElementById("cart").innerHTML = request.responseText;
+			  document.getElementById("cart").style.backgroundColor = "beige";
+			}
+		  };
+		  request.open("GET","getCart?name="+name,true);
+		  request.send();
+	}
+	
+	function disp(button){
+		category = button.value.toLowerCase();
+		var request = new XMLHttpRequest();
+		  request.onreadystatechange=function() {
+			if (request.readyState==4 ) {
+			  document.getElementById("listitems").style.display="block";
+			  document.getElementById("listitems").innerHTML=request.responseText;
+			  document.getElementById("item").innerHTML = "<h2>Select a Category</h2>";
+			  document.getElementById("item").style.backgroundColor = "beige";
+			}
+		  };
+		  request.open("GET","foodlist?category="+category,true);
+		  request.send();
+	}
+	
+	function remove(){
+		document.getElementById(category+"items").innerHTML=" ";
+	}
+	
+	function getDetails(button){
+		item = button.value;
+		var request = new XMLHttpRequest();
+		  request.onreadystatechange=function() {
+			if (request.readyState==4 ) {
+			  document.getElementById("item").innerHTML=request.responseText;
+			}
+		  };
+		  request.open("GET","getItemDetails?category="+category+"&item="+item,true);
+		  request.send();
+	}
+	
+	function inc(i){
+		var qty = parseInt(document.getElementById(i+"qty").value);
+		qty++;
+		document.getElementById(i+"qty").value = qty;
+	}
+	
+	function dec(i){
+		var qty = parseInt(document.getElementById(i+"qty").value);
+		if(qty>0)
+			qty--;
+		document.getElementById(i+"qty").value = qty;
+	}
+	
+	function addToCart(button,i){
+		var item = button.id;
+		var qty = document.getElementById(i+"qty").value;
+		var price = document.getElementById(i+"price").innerHTML;
+		if(qty=="0")
+			alert("Enter a quantity");
+		else{
+			var request = new XMLHttpRequest();
+			  request.onreadystatechange=function() {
+				if (request.readyState==4 ) {
+				  alert(request.responseText);
+				}
+			  };
+			request.open("GET","addToCart?category="+category+"&item="+item+"&qty="+qty+"&name="+name+"&price="+price,true);
+			request.send();
+		}
+	}
+</script>
+</html>
